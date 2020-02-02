@@ -31,8 +31,10 @@ class NeoFire
     void Clear();
     void AddColor(uint8_t position, uint32_t color);
     void SubstractColor(uint8_t position, uint32_t color);
+    void SubstractColorRGB(uint8_t position, int16_t r, int16_t g, int16_t b);
     uint32_t Blend(uint32_t color1, uint32_t color2);
     uint32_t Substract(uint32_t color1, uint32_t color2);
+    uint32_t SubstractRGB(uint32_t color1, int16_t r2, int16_t g2, int16_t b2);
     uint32_t Fade(uint32_t color1, uint32_t color2, uint8_t position, int led);
     uint32_t off_color;
 };
@@ -42,7 +44,7 @@ class NeoFire
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 NeoFire::NeoFire(Adafruit_NeoPixel& n_strip) : strip (n_strip)
 {
-   off_color    = strip.Color (  0,  0,  0);
+  off_color    = strip.Color (  0,  0,  0);
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,9 +60,18 @@ void NeoFire::Draw(uint32_t act_color)
     AddColor(i, act_color);
 
     //int r = random(80);
-    int b = random(255);
-    uint32_t diff_color = strip.Color ( b / 2, b, b);
-    SubstractColor(i, diff_color);
+
+   //int b = random(255);
+   //uint32_t diff_color = strip.Color ( b / 2, b, b);
+
+    int16_t r = random(512);
+    Serial.print("Draw: ");
+    Serial.print(r );
+    //uint32_t diff_color = strip.Color ( r, r, r / 2);
+    //SubstractColor(i, diff_color);
+
+    SubstractColorRGB(i,  r, r, r / 2);
+    Serial.println();
   }
 
 }
@@ -88,6 +99,17 @@ void NeoFire::SubstractColor(uint8_t position, uint32_t color)
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/// Set color of LED with substraction of RGB
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void NeoFire::SubstractColorRGB(uint8_t position, int16_t r, int16_t g, int16_t b)
+{
+  // uint32_t blended_color = Substract(strip.getPixelColor(position), color);
+  uint32_t blended_color = SubstractRGB(fire_colors[position], r, g, b);
+  //strip.setPixelColor(position, blended_color);
+  fire_colors[position] = blended_color;
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /// Color blending
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 uint32_t NeoFire::Blend(uint32_t color1, uint32_t color2)
@@ -108,7 +130,7 @@ uint32_t NeoFire::Blend(uint32_t color1, uint32_t color2)
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// Color blending
+/// Color Subtract color from color
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 uint32_t NeoFire::Substract(uint32_t color1, uint32_t color2)
 {
@@ -135,7 +157,27 @@ uint32_t NeoFire::Substract(uint32_t color1, uint32_t color2)
   return strip.Color(r, g, b);
 }
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/// Color Subtract rgb from color
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+uint32_t NeoFire::SubstractRGB(uint32_t color1, int16_t r2, int16_t g2, int16_t b2)
+{
+  uint8_t r1, g1, b1;
+  int16_t r, g, b;
 
+  r1 = (uint8_t)(color1 >> 16),
+  g1 = (uint8_t)(color1 >>  8),
+  b1 = (uint8_t)(color1 >>  0);
+
+  r = (int16_t)r1 - (int16_t)r2;
+  g = (int16_t)g1 - (int16_t)g2;
+  b = (int16_t)b1 - (int16_t)b2;
+  if (r < 0) r = 0;
+  if (g < 0) g = 0;
+  if (b < 0) b = 0;
+
+  return strip.Color(r, g, b);
+}
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // fade from color1 to color2 with certain fader position

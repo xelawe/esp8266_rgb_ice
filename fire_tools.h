@@ -17,9 +17,10 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(CNT, PIN, NEO_GRB + NEO_KHZ800);
 
 
 uint32_t active_color;
-uint32_t fire_color   = strip.Color ( 80,  35,  0);
+//uint32_t fire_color   = strip.Color ( 80,  35,  0);
+uint32_t fire_color   = strip.Color ( 255,  80,  0);
 //uint32_t ice_color   = strip.Color ( 0,  216,  255);
-uint32_t ice_color   = strip.Color ( 0,  80,  90);
+uint32_t ice_color   = strip.Color ( 0,  80,  94);
 
 
 int fader_pos;
@@ -52,7 +53,8 @@ void init_fire() {
 
 
   active_color = ice_color;
-  
+    active_color = fire_color;
+    
   fire.Draw( active_color );
 }
 
