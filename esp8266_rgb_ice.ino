@@ -19,18 +19,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define serdebug
-#ifdef serdebug
-#define DebugPrint(...) {  Serial.print(__VA_ARGS__); }
-#define DebugPrintln(...) {  Serial.println(__VA_ARGS__); }
-#else
-#define DebugPrint(...) { }
-#define DebugPrintln(...) { }
-#endif
+#include <cy_serdebug.h>
+#include <cy_serial.h>
+
+const char *gc_hostname = "esprgbice";
 
 #include <Adafruit_NeoPixel.h>
 #include <Ticker.h>
 #include "cy_wifi.h"
+#include "cy_ota.h"
 #include "cy_mqtt.h"
 
 
@@ -335,20 +332,21 @@ void firedraw() {
   fader_pos = 0;
   fire.Draw();
 }
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void fireshow() {
   fader_pos++;
+
   Serial.print("Fader: ");
-  Serial.println(fader_pos );
+  Serial.print(fader_pos );
+
   for (int i = 0; i < CNT; i++)
   {
-
     strip.setPixelColor(i, fire.Fade(strip.getPixelColor(i), fire.fire_colors[i], fader_pos, i) );
-
   }
   strip.show();
-  //  Serial.println();
+
+  Serial.println();
 
 }
 
@@ -357,23 +355,23 @@ void fireshow() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void setup()
 {
-
-#ifdef serdebug
-  Serial.begin(115200);
-#endif
-
-  DebugPrintln("\n" + String(__DATE__) + ", " + String(__TIME__) + " " + String(__FILE__));
+  cy_serial::start(__FILE__);
 
   gv_temp = 0;
 
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
+  wifi_init(gc_hostname);
+
+  init_ota(gv_clientname);
+
   firedraw();
   //drawticker.attach(fader_steps, firedraw);
   //showticker.attach(1, fireshow);
-  drawticker.attach(6, firedraw);
+   drawticker.attach(6, firedraw);
   showticker.attach(0.1, fireshow);
+  //showticker.attach(0.1, firetick);
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -382,7 +380,8 @@ void setup()
 void loop()
 {
 
-  //delay(random(500, 1500));
+  check_ota();
 
-  delay(500);
+  delay(20);
+
 }
