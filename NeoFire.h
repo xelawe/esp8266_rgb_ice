@@ -1,12 +1,21 @@
-uint32_t active_color;
-uint32_t fire_color   = strip.Color ( 80,  35,  0);
-//uint32_t ice_color   = strip.Color ( 0,  216,  255);
-uint32_t ice_color   = strip.Color ( 0,  80,  90);
-uint32_t off_color    = strip.Color (  0,  0,  0);
+/**
+  Arduino Uno - NeoPixel Fire
+  v. 1.0
+  Copyright (C) 2015 Robert Ulbricht
 
-int fader_pos;
-#define fader_steps 60
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /// Fire simulator
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,13 +27,14 @@ class NeoFire
     NeoFire(Adafruit_NeoPixel&);
     uint32_t fire_colors[CNT];
     int fire_ticks[CNT];
-    void Draw();
+    void Draw(uint32_t act_color);
     void Clear();
     void AddColor(uint8_t position, uint32_t color);
     void SubstractColor(uint8_t position, uint32_t color);
     uint32_t Blend(uint32_t color1, uint32_t color2);
     uint32_t Substract(uint32_t color1, uint32_t color2);
     uint32_t Fade(uint32_t color1, uint32_t color2, uint8_t position, int led);
+    uint32_t off_color;
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,38 +42,20 @@ class NeoFire
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 NeoFire::NeoFire(Adafruit_NeoPixel& n_strip) : strip (n_strip)
 {
+   off_color    = strip.Color (  0,  0,  0);
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /// Set all colors
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void NeoFire::Draw()
+void NeoFire::Draw(uint32_t act_color)
 {
   Clear();
-
-  //  if ( gv_temp < 20 ) {
-  //    active_color = fire_color;
-  //  } else {
-  //    active_color = ice_color;
-  //  }
-  //
-  //  ++gv_temp;
-  //  if ( gv_temp > 30 ) {
-  //    gv_temp = 0;
-  //  }
-  //
-  //
-  //    Serial.print("Temp: ");
-  //  Serial.println(gv_temp );
-
-
-  active_color = ice_color;
 
   for (int i = 0; i < CNT; i++)
   {
 
-    AddColor(i, active_color);
-
+    AddColor(i, act_color);
 
     //int r = random(80);
     int b = random(255);
@@ -71,7 +63,6 @@ void NeoFire::Draw()
     SubstractColor(i, diff_color);
   }
 
-  //strip.show();
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -171,11 +162,11 @@ uint32_t NeoFire::Fade(uint32_t color1, uint32_t color2, uint8_t position, int l
     fire_ticks[led] = 0;
   }
 
-  if ( led < 5 ) {
-    Serial.print("LED: ");
-    Serial.print(led);
-    Serial.print(" ");
-  }
+  //  if ( led < 5 ) {
+  //    Serial.print("LED: ");
+  //    Serial.print(led);
+  //    Serial.print(" ");
+
 
   //  Serial.print("Rot:");
   //  Serial.print(r1);
@@ -189,6 +180,8 @@ uint32_t NeoFire::Fade(uint32_t color1, uint32_t color2, uint8_t position, int l
   //  Serial.print(b1);
   //  Serial.print(" -> ");
   //  Serial.println(b2);
+  // }
+
 
   // int divisor = fader_steps - position;
   int divisor = fader_steps - position + fire_ticks[led];
@@ -238,21 +231,21 @@ uint32_t NeoFire::Fade(uint32_t color1, uint32_t color2, uint8_t position, int l
     fire_ticks[led] = 0;
   }
 
-  if ( led < 5 ) {
-    Serial.print("Tick: ");
-    Serial.print(fire_ticks[led] );
-    Serial.print(", ");
-
-    Serial.print("R: ");
-    Serial.print(inci_r);
-    Serial.print(" ");
-    Serial.print("G: ");
-    Serial.print(inci_g);
-    Serial.print(" ");
-    Serial.print("B: ");
-    Serial.print(inci_b);
-    Serial.print(" ");
-  }
+  //  if ( led < 5 ) {
+  //    Serial.print("Tick: ");
+  //    Serial.print(fire_ticks[led] );
+  //    Serial.print(", ");
+  //
+  //    Serial.print("R: ");
+  //    Serial.print(inci_r);
+  //    Serial.print(" ");
+  //    Serial.print("G: ");
+  //    Serial.print(inci_g);
+  //    Serial.print(" ");
+  //    Serial.print("B: ");
+  //    Serial.print(inci_b);
+  //    Serial.print(" ");
+  //  }
 
   return strip.Color(r, g, b);
 }
