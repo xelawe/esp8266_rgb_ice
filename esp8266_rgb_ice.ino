@@ -59,6 +59,7 @@ int gv_temp;
 
 Ticker drawticker;
 Ticker showticker;
+Ticker fireticker;
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,9 +226,11 @@ uint32_t NeoFire::Fade(uint32_t color1, uint32_t color2, uint8_t position, int l
     fire_ticks[led] = 0;
   }
 
-  //  Serial.print("LED: ");
-  //  Serial.print(led);
-  //  Serial.print(" ");
+  if ( led < 5 ) {
+    Serial.print("LED: ");
+    Serial.print(led);
+    Serial.print(" ");
+  }
 
   //  Serial.print("Rot:");
   //  Serial.print(r1);
@@ -290,23 +293,21 @@ uint32_t NeoFire::Fade(uint32_t color1, uint32_t color2, uint8_t position, int l
     fire_ticks[led] = 0;
   }
 
-  //  Serial.print("Tick: ");
-  //  Serial.print(fire_ticks[led] );
-  //  Serial.print(", ");
+  if ( led < 5 ) {
+    Serial.print("Tick: ");
+    Serial.print(fire_ticks[led] );
+    Serial.print(", ");
 
-  //  Serial.print("R:");
-  //  Serial.print(r);
-  //  Serial.print("G:");
-  //  Serial.print(g);
-  //  Serial.print("B:");
-  //  Serial.println(b);
-
-  //r = (int16_t)r1 - (int16_t)r2;
-  //g = (int16_t)g1 - (int16_t)g2;
-  //b = (int16_t)b1 - (int16_t)b2;
-  //if (r < 0) r = 0;
-  //if (g < 0) g = 0;
-  //if (b < 0) b = 0;
+    Serial.print("R: ");
+    Serial.print(inci_r);
+    Serial.print(" ");
+    Serial.print("G: ");
+    Serial.print(inci_g);
+    Serial.print(" ");
+    Serial.print("B: ");
+    Serial.print(inci_b);
+    Serial.print(" ");
+  }
 
   return strip.Color(r, g, b);
 }
@@ -369,9 +370,9 @@ void setup()
   firedraw();
   //drawticker.attach(fader_steps, firedraw);
   //showticker.attach(1, fireshow);
-   drawticker.attach(6, firedraw);
+  drawticker.attach(6, firedraw);
   showticker.attach(0.1, fireshow);
-  //showticker.attach(0.1, firetick);
+  //fireticker.attach(0.1, firetick);
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
