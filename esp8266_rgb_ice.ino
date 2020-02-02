@@ -30,7 +30,7 @@ void setup()
 
   init_fire();
 
-  fireticker.attach(0.1, firetick);
+  fireticker.attach(0.05, firetick);
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

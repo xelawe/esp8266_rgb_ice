@@ -31,8 +31,6 @@ NeoFire fire(strip);
 
 Ticker fireticker;
 
-
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void init_fire() {
   fader_pos = 0;
@@ -62,14 +60,14 @@ void init_fire() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void firetick() {
   
-  if (fader_pos > fader_steps ){
+  if (fader_pos >= fader_steps ){
    init_fire();
   }
 
   fader_pos++;
 
-  Serial.print("Fader: ");
-  Serial.print(fader_pos );
+  //Serial.print("Fader: ");
+  //Serial.print(fader_pos );
 
   for (int i = 0; i < CNT; i++)
   {
@@ -77,6 +75,6 @@ void firetick() {
   }
   strip.show();
 
-  Serial.println();
+  //Serial.println();
 }
 
