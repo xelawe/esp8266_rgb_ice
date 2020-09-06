@@ -25,9 +25,9 @@ void setup()
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
-  gv_noconn_reset = false;
-  gv_portal_timeout = 60;
-  wifi_init(gc_hostname);
+  //gv_noconn_reset = false;
+  //gv_portal_timeout = 60;
+  wifi_init(gc_hostname, 60, false);
 
   init_ota_local();
 
