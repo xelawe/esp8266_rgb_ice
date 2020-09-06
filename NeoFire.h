@@ -65,12 +65,15 @@ void NeoFire::Draw(uint32_t act_color)
    //uint32_t diff_color = strip.Color ( b / 2, b, b);
 
     int16_t r = random(355);
+    if (r>255){
+      r = 255;
+    }
    // Serial.print("Draw: ");
   //  Serial.print(r );
-    //uint32_t diff_color = strip.Color ( r, r, r / 2);
-    //SubstractColor(i, diff_color);
+    uint32_t diff_color = strip.Color ( r, r, r / 2);
+    SubstractColor(i, diff_color);
 
-    SubstractColorRGB(i,  r, r, r / 2);
+    //SubstractColorRGB(i,  r, r, r / 2);
    // Serial.println();
   }
 

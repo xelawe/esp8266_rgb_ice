@@ -4,7 +4,7 @@
 // data pin
 #define PIN 5
 // led count
-#define CNT 37
+#define CNT 21 //37
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -36,7 +36,7 @@ Ticker fireticker;
 void init_fire() {
   fader_pos = 0;
 
-    //  if ( gv_temp < 20 ) {
+  //  if ( gv_temp < 20 ) {
   //    active_color = fire_color;
   //  } else {
   //    active_color = ice_color;
@@ -53,17 +53,17 @@ void init_fire() {
 
 
   active_color = ice_color;
-    active_color = fire_color;
-    
+ //active_color = fire_color;
+
   fire.Draw( active_color );
 }
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void firetick() {
-  
-  if (fader_pos >= fader_steps ){
-   init_fire();
+
+  if (fader_pos >= fader_steps ) {
+    init_fire();
   }
 
   fader_pos++;

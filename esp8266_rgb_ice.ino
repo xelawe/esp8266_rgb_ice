@@ -4,10 +4,11 @@
 const char *gc_hostname = "esprgbice";
 
 #include "cy_wifi.h"
-#include "cy_ota.h"
-#include "cy_mqtt.h"
+
+//#include "cy_mqtt.h"
 
 #include "fire_tools.h"
+#include "ota_tool.h"
 
 int gv_temp;
 
@@ -24,13 +25,17 @@ void setup()
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
+  gv_noconn_reset = false;
+  gv_portal_timeout = 60;
   wifi_init(gc_hostname);
 
-  init_ota(gv_clientname);
+  init_ota_local();
 
   init_fire();
 
   fireticker.attach(0.05, firetick);
+
+  DebugPrintln("Setup done.");
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
